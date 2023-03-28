@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zooming Mandelbrot Fractal</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let zoom = 1;
+        let offsetX = canvas.width / 2;
+        let offsetY = canvas.height / 2;
+
+        function drawMandelbrot() {
+            for (let x = 0; x < canvas.width; x++) {
+                for (let y = 0; y < canvas.height; y++) {
+                    const real = (x - offsetX) / zoom;
+                    const imag = (y - offsetY) / zoom;
+
+                    let cReal = real;
+                    let cImag = imag;
+
+                    let iterations = 0;
+                    const maxIterations = 100;
+
+                    while (iterations < maxIterations) {
+                        const r2 = cReal * cReal;
+                        const i2 = cImag * cImag;
+
+                        if (r2 + i2 > 4) {
+                            break;
+                        }
+
+                        cImag = 2 * cReal * cImag + imag;
+                        cReal = r2 - i2 + real;
+
+                        iterations++;
+                    }
+
+                    const color = iterations === maxIterations ? 0 : (iterations * 10) % 255;
+                    ctx.fillStyle = `rgb(${color}, ${color}, ${color})`;
+                    ctx.fillRect(x, y, 1, 1);
+                }
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            drawMandelbrot();
+            zoom *= 1.01;
+        }
+
+        animate();
+    </script>
+</body>
+</html>
