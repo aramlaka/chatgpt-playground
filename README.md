@@ -16,3 +16,5 @@ _Can you make a webGL mandlebrot fractal zoom game?_
 _Can you make an HTML program to spawn a circle that gradually grows in size and shifts its colors in a gradient on click? When it collides with another circle, can you make the colors mix?_
 ![image](https://user-images.githubusercontent.com/9098523/228320068-c4ee8ea3-7cb2-466e-acda-9f68e94cbaa7.png)
 
+_Can you make me a webpage where the background has constant kinetic movement? I want little shapes linked by lines that slowly move. This should take up the entire background of the webpage?_
+![chrome_ONQczeXDSO](https://user-images.githubusercontent.com/9098523/228330321-1b36685a-42ef-4446-84cd-a47e4a407e75.gif)
