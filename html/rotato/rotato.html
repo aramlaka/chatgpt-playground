@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .moving-text {
+      position: absolute;
+      font-size: 24px;
+      user-select: none;
+      pointer-events: none;
+    }
+  </style>
+  <title>Moving Chinese Text</title>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+  <script src="sketch.js"></script>
+  <script>
+    function generateRandomChineseText() {
+      const textLength = Math.floor(Math.random() * 10) + 1;
+      let randomText = '';
+
+      for (let i = 0; i < textLength; i++) {
+        randomText += String.fromCharCode(0x4E00 + Math.floor(Math.random() * (0x9FFF - 0x4E00)));
+      }
+
+      return randomText;
+    }
+
+    function animateText(text) {
+      const angle = Math.random() * 2 * Math.PI;
+      const velocity = 1;
+      const dx = Math.cos(angle) * velocity;
+      const dy = Math.sin(angle) * velocity;
+
+      function move() {
+        const left = parseFloat(text.style.left);
+        const top = parseFloat(text.style.top);
+
+        text.style.left = `${left + dx}px`;
+        text.style.top = `${top + dy}px`;
+
+        requestAnimationFrame(move);
+      }
+
+      move();
+    }
+
+    document.addEventListener('click', (event) => {
+      const text = document.createElement('div');
+      text.classList.add('moving-text');
+      text.textContent = generateRandomChineseText();
+      text.style.left = `${event.clientX}px`;
+      text.style.top = `${event.clientY}px`;
+      document.body.appendChild(text);
+
+      animateText(text);
+    });
+  </script>
+</body>
+</html>
