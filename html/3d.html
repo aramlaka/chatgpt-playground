@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Character Control</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <script>
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create a character (cube) and add it to the scene
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const character = new THREE.Mesh(geometry, material);
+        scene.add(character);
+        camera.position.z = 5;
+
+        // Set up controls
+        const controls = {
+            forward: false,
+            backward: false,
+            left: false,
+            right: false,
+        };
+
+        // Listen for key events
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'KeyW') controls.forward = true;
+            if (e.code === 'KeyS') controls.backward = true;
+            if (e.code === 'KeyA') controls.left = true;
+            if (e.code === 'KeyD') controls.right = true;
+            if (e.code === 'Space') spawnRandomObjects(10);
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.code === 'KeyW') controls.forward = false;
+            if (e.code === 'KeyS') controls.backward = false;
+            if (e.code === 'KeyA') controls.left = false;
+            if (e.code === 'KeyD') controls.right = false;
+        });
+
+        // Function to spawn random objects
+        function spawnRandomObjects(count) {
+            for (let i = 0; i < count; i++) {
+                const geometry = new THREE.BoxGeometry(
+                    Math.random() * 2, Math.random() * 2, Math.random() * 2
+                );
+                const material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+                const obj = new THREE.Mesh(geometry, material);
+                obj.position.set(
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20,
+                    (Math.random() - 0.5) * 20
+                );
+                scene.add(obj);
+            }
+        }
+
+                // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Update character position based on controls
+            if (controls.forward) character.position.z -= 0.1;
+            if (controls.backward) character.position.z += 0.1;
+            if (controls.left) character.position.x -= 0.1;
+            if (controls.right) character.position.x += 0.1;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>

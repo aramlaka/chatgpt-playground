@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        // Set up the scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Create a sphere with the texture
+        const geometry = new THREE.SphereGeometry(1, 32, 32);
+        const loader = new THREE.TextureLoader();
+        const material = new THREE.MeshBasicMaterial({
+            map: loader.load("https://dl.dropboxusercontent.com/s/90fugql3buqn3su/chasedown_feathered_highres.png"),
+        });
+
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        camera.position.z = 5;
+
+        // Bouncing animation
+        const rotationSpeedX = 0.01;
+        const rotationSpeedY = 0.01;
+        let velocityX = randomFloat(0.03, 0.07);
+        let velocityY = randomFloat(0.03, 0.07);
+        let directionX = Math.random() < 0.5 ? 1 : -1;
+        let directionY = Math.random() < 0.5 ? 1 : -1;
+        const minX = -3;
+        const maxX = 3;
+        const minY = -3;
+        const maxY = 3;
+        const direction = 1;
+
+        const animate = function () {
+            requestAnimationFrame(animate);
+
+            // Bounce sphere in X direction
+            sphere.position.x += velocityX * directionX;
+            if (directionX === 1 && sphere.position.x >= maxX) {
+                directionX = -1;
+            } else if (directionX === -1 && sphere.position.x <= minX) {
+                directionX = 1;
+            }
+
+            // Bounce sphere in Y direction
+            sphere.position.y += velocityY * directionY;
+            if (directionY === 1 && sphere.position.y >= maxY) {
+                directionY = -1;
+            } else if (directionY === -1 && sphere.position.y <= minY) {
+                directionY = 1;
+            }
+
+            // Rotate sphere
+            sphere.rotation.x += rotationSpeedX;
+            sphere.rotation.y += rotationSpeedY;
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        function randomFloat(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        // Resize event
+        window.addEventListener("resize", () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

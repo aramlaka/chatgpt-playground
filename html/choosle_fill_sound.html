@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Spheres</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load('https://dl.dropboxusercontent.com/s/90fugql3buqn3su/chasedown_feathered_highres.png', texture => {
+            setInterval(() => {
+                createSphere(texture);
+            }, 500);
+        });
+
+        let poppingSoundBuffer;
+
+        function loadPoppingSound(url) {
+            const request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.responseType = 'arraybuffer';
+
+            request.onload = function () {
+                audioContext.decodeAudioData(request.response, function (buffer) {
+                    poppingSoundBuffer = buffer;
+                });
+            };
+
+            request.send();
+        }
+
+        loadPoppingSound('https://dl.dropboxusercontent.com/s/x0kkw6hox8eyrnd/IWantYouInMe_Short.mp3');
+
+        function playPoppingSound() {
+            if (!poppingSoundBuffer) return;
+
+            const source = audioContext.createBufferSource();
+            source.buffer = poppingSoundBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+        }
+
+        camera.position.z = 5;
+
+        function createSphere(texture) {
+            const geometry = new THREE.SphereGeometry(0.5, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ map: texture });
+            const sphere = new THREE.Mesh(geometry, material);
+
+            sphere.position.set(
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10,
+                (Math.random() - 0.5) * 10
+            );
+            playPoppingSound();
+
+            scene.add(sphere);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+            scene.rotation.y += 0.005;
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            renderer.setSize(width, height);
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
