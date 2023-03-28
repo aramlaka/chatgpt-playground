@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growing Sphere</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let sphere = null;
+
+        canvas.addEventListener('click', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            sphere = { x, y, radius: 1, growthRate: 0.1 };
+        });
+
+        function hsvToRgb(h, s, v) {
+            let r, g, b;
+            const i = Math.floor(h * 6);
+            const f = h * 6 - i;
+            const p = v * (1 - s);
+            const q = v * (1 - f * s);
+            const t = v * (1 - (1 - f) * s);
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return [r * 255, g * 255, b * 255];
+        }
+
+        function drawSphere(x, y, radius, hue) {
+            const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+            const steps = 10;
+            for (let i = 0; i <= steps; i++) {
+                const [r, g, b] = hsvToRgb((hue + i / steps) % 1, 1, 1);
+                gradient.addColorStop(i / steps, `rgb(${r}, ${g}, ${b})`);
+            }
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fill();
+        }
+
+        function animate(timestamp) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (sphere) {
+                // Adjust the divisor to change the color transition speed.
+                drawSphere(sphere.x, sphere.y, sphere.radius, (timestamp / 2000) % 1);
+                sphere.radius += sphere.growthRate;
+                sphere.growthRate += 0.1;
+
+                if (sphere.radius > Math.max(canvas.width, canvas.height)) {
+                    ctx.fillStyle = 'white';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    sphere = null;
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
