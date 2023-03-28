@@ -4,9 +4,7 @@ Random chatGpt generated code
 # Running HTML Files
 Just open up the HTML files in any browser
 
-Some examples:
-
-_Note: These prompts are summaries/starters for multiple conversations with chatGpt. To get these final results, I had to adjust the prompts over time, ex.) for the kinetic movement I had to request "Can you increase the amount of the kinetic objects? Can you make them have random colors?"_
+# Examples
 
 _Can you make a 3D webGl program with a controllable character. When the space bar is pressed, can you spawn random objects that grow in size until they collide with one another?_
 ![chrome_XQmv2zqwHB](https://user-images.githubusercontent.com/9098523/228318374-bdc8a7c4-bd7c-4276-bc6a-9f06466edc0e.gif)
@@ -19,3 +17,5 @@ _Can you make an HTML program to spawn a circle that gradually grows in size and
 
 _Can you make me a webpage where the background has constant kinetic movement? I want little shapes linked by lines that slowly move. This should take up the entire background of the webpage._
 ![chrome_ONQczeXDSO](https://user-images.githubusercontent.com/9098523/228330321-1b36685a-42ef-4446-84cd-a47e4a407e75.gif)
+
+_Note: These prompts are summaries/starters for multiple conversations with chatGpt. To get these final results, I had to adjust the prompts over time, ex.) for the kinetic movement I had to request "Can you increase the amount of the kinetic objects? Can you make them have random colors?"_
